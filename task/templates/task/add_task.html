@@ -1,0 +1,56 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Add Task</title>
+  <link rel="stylesheet" href="{% static 'style/home.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="{% url 'home' %}" class="brand">TaskFlow</a>
+      <nav class="nav">
+        <a href="{% url 'home' %}">Back to Tasks</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container narrow">
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Add New Task</h2>
+        <p class="muted">Fill in the details and save to create a task.</p>
+      </div>
+
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-grid">
+            {{ form.as_p }}
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Add Task</button>
+            <a href="{% url 'home' %}" class="btn btn-outline">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">© {{ now.year }} TaskFlow</div>
+  </footer>
+</body>
+</html>
+

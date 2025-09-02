@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do</title>
+  <link rel="stylesheet" href="{% static 'style/home.css' %}">
+</head>
+<body>
+  <!-- Navbar with Add Task -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="#">✓ To-Do</a>
+
+      <!-- Add Task (posts to same view) -->
+      <form method="post" class="add-form" action="">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Add a new task…" required>
+        <input type="datetime-local" name="due_date">
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="container">
+    <div class="card">
+      <h2 class="card-title">Tasks</h2>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Task</th>
+              <th>Descrition</th>
+              <th>Due</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for task in tasks %}
+              <tr class="{% if task.completed %}done{% endif %}">
+                <td>{{ forloop.counter }}</td>
+                <td>
+                  <div class="title">{{ task.title }}</div>
+                </td>
+                <td>
+                
+                  {% if task.description %}
+                    <div class="desc">{{ task.description|truncatechars:120 }}</div>
+                  {% endif %}
+                </td>
+                <td>{% if task.due_date %}{{ task.due_date|date:"M d, Y H:i" }}{% else %}-{% endif %}</td>
+                <td>
+                  {% if task.completed %}
+                    <span class="badge badge-done"></span>
+                  {% else %}
+                    <span class="badge badge-open">Open</span>
+                  {% endif %}
+                </td>
+                <td>{{ task.created_at|date:"M d, Y" }}</td>
+                <td class="actions">
+                  <a href="{#}" class="btn btn-edit" aria-label="Edit {{ task.title }}">✏️ Edit</a>
+                  <a href="{#}" class="btn btn-delete" aria-label="Delete {{ task.title }}" onclick="return confirm('Delete this task?');">🗑️ Delete</a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="empty">No tasks yet — add one above.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
